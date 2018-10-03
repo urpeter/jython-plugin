@@ -18,30 +18,24 @@ import java.util.Map;
  * @author koller
  */
 public class OutputNode extends AbstractOutputNode {
-
-    @Override
-    protected IPromptType getDefaultPromptType() {
-        return DefaultPromptType.text;
-    }
-
     @Override
     public String getResourceString(String string) {
         return string;
     }
 
     @Override
-    protected List<VoiceName> getAvailableVoices() {
+    public List<VoiceName> getAvailableVoices() {
         return Collections.singletonList(new VoiceName("", null));
     }
 
     @Override
-    protected void speak(String string, Map<String, Object> map) throws SpeechException {
+    public void speak(String string, Map<String, Object> map) throws SpeechException {
         System.err.println("speak: " + string);
         System.err.println(" -> with map: " + map);
     }
 
     @Override
-    protected void stopSynthesis() {
+    public void stopSynthesis() {
     }
     
 }
