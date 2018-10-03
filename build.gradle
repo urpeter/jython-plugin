@@ -1,0 +1,26 @@
+plugins {
+  id 'java'
+  id 'maven'
+  id 'application'
+}
+repositories {
+  jcenter()
+  maven { url "https://jitpack.io" }
+}
+
+dependencies {
+  compile files('/Users/koller/Documents/workspace/dialogos/dialogos/build/libs/dialogos.jar')
+
+/*
+  implementation(group:'com.github.dialogos-project', name:'dialogos',  version:'v2.0.0') {
+    exclude module: 'DialogOS_SphinxPlugin'
+  }
+  */
+}
+
+mainClassName = 'com.clt.dialogos.DialogOS'
+def version = 1.0
+run {
+  standardInput = System.in
+}
+
