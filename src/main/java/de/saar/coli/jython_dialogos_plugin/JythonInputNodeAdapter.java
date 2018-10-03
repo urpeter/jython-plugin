@@ -18,13 +18,29 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.swing.JLayeredPane;
 
 /**
- *
+ * Converts a Jython implementation of an {@link AbstractInputNode} into
+ * a Java implementation. The module and class name of the Jython class are
+ * given as arguments in the constructor; the Jython class is expected to
+ * be derived from the base class {@link AbstractInputNode}.<p>
+ * 
+ * The Jython class must implement all abstract methods of {@link AbstractInputNode}.
+ * In addition, it may implement {@link AbstractInputNode#recognizeInBackground(com.clt.srgf.Grammar, com.clt.diamant.InputCenter, com.clt.script.exp.patterns.VarPattern, float) }
+ * or {@link AbstractInputNode#graphicallyRecognize(javax.swing.JLayeredPane, com.clt.srgf.Grammar, com.clt.script.exp.Pattern[], long, float, boolean) }
+ * (or both). These method implementations are used if they are present;
+ * otherwise the default implementations from {@link AbstractInputNode}
+ * are used.<p>
+ * 
+ * It is usually not a good idea to use this class in a DialogOS plugin directly,
+ * because the plugin wants to register classes with parameter-less constructors,
+ * and you probably want to set the name and icon for your node to something
+ * meaningful. Therefore, you should derive a concrete class from {@link JythonInputNodeAdapter},
+ * set the Jython module and class in its parameterless constructor,
+ * and provide your own implementation of {@link Node#getNodeTypeName(java.lang.Class) }.
+ * 
  * @author koller
  */
 public class JythonInputNodeAdapter extends AbstractInputNode {
