@@ -13,6 +13,7 @@ class JythonOutputNode(AbstractOutputNode):
         return DefaultPromptType.text
 
     def getResourceString(self, string):
+        print "requested resource string: " + str(string)
         return string
 
     def getAvailableVoices(self):

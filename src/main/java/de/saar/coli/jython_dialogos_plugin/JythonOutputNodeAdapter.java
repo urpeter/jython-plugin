@@ -10,16 +10,19 @@ import com.clt.speech.SpeechException;
 import com.clt.speech.tts.VoiceName;
 import java.util.List;
 import java.util.Map;
-import org.python.core.PyObject;
-import org.python.util.PythonInterpreter;
 
 /**
  *
  * @author koller
  */
 public class JythonOutputNodeAdapter extends AbstractOutputNode {
-    private static JythonFactory factory = new JythonFactory();
+
+    private static JythonOutputNodeFactory factory = new JythonOutputNodeFactory("jython.output_node", "JythonOutputNode");
     private AbstractOutputNode delegate = factory.create();
+    
+    public static String getNodeTypeName(Class<?> c) {
+        return "Jython Output";
+    }
 
     @Override
     public String getResourceString(String string) {
@@ -40,20 +43,5 @@ public class JythonOutputNodeAdapter extends AbstractOutputNode {
     public void stopSynthesis() {
         delegate.stopSynthesis();
     }
-    
 
-    private static class JythonFactory {
-        public JythonFactory() {
-            PythonInterpreter interpreter = new PythonInterpreter();
-            interpreter.exec("from jython.output_node import JythonOutputNode");
-            pyNodeClass = interpreter.get("JythonOutputNode");
-        }
-
-        public AbstractOutputNode create() {
-            PyObject pyNodeObject = pyNodeClass.__call__();
-            return (AbstractOutputNode) pyNodeObject.__tojava__(AbstractOutputNode.class);
-        }
-
-        private PyObject pyNodeClass;
-    }
 }
