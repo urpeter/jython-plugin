@@ -51,10 +51,11 @@ public class JythonDialogosPlugin implements Plugin {
         Plugin.super.initialize(); //To change body of generated methods, choose Tools | Templates.
 
         Node.registerNodeTypes(com.clt.speech.Resources.getResources().createLocalizedString("IONode"),
-                Arrays.asList(JythonStdoutNode.class));
+                Arrays.asList(JythonStdoutNode.class, JythonStdinNode.class));
 
         // This initializes all of Jython; do it now so we have it out of the way.
         new JythonStdoutNode();
+        new JythonStdinNode();
     }
 
     @Override
