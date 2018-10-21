@@ -21,14 +21,12 @@ import javax.swing.JComponent;
  *
  * @author koller
  */
-public class JythonNodeAdapter extends Node {
-
-    private static JythonObjectFactory factory = JythonObjectFactory.getSingleton();
-    private Node delegate;
+public abstract class JythonNodeAdapter extends Node {
+    protected static JythonObjectFactory factory = JythonObjectFactory.getSingleton();
+    protected Node delegate;
     
-
     public JythonNodeAdapter(String module, String clazz) {
-        delegate = factory.create(module, clazz, Node.class);
+        delegate = factory.create(module, clazz, Node.class, this);
     }
 
     @Override
@@ -55,4 +53,9 @@ public class JythonNodeAdapter extends Node {
             throw (RuntimeException) ex.getCause();
         }
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\n(wrapper for " + (delegate == null ? "<uninit>" : delegate.toString()) + ")";
+    }    
 }

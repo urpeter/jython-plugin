@@ -52,17 +52,22 @@ public class JythonObjectFactory {
      * 
      * The Jython interpreter looks for the given module at the top level
      * of the classpath. To package a Jython module in a Jar file, the
-     * easiest way is to put it into src/main/resources.
+     * easiest way is to put it into src/main/resources.<p>
+     * 
+     * You may optionally pass Java objects as arguments to the __init__
+     * method of the newly constructed Jython object using the varargs
+     * parameter "args".
      * 
      * @param <E>
      * @param module
      * @param jythonClassName
      * @param javaClass
+     * @param args
      * @return 
      */
-    public <E> E create(String module, String jythonClassName, Class<E> javaClass) {
+    public <E> E create(String module, String jythonClassName, Class<E> javaClass, Object... args) {
         PyObject pyNodeClass = getOrCreatePyClass(module, jythonClassName);
-        PyObject pyNodeObject = pyNodeClass.__call__();
+        PyObject pyNodeObject = pyNodeClass._jcall(args); // convert Java args to PyObjects and invoke __init__ with these arguments
         return (E) pyNodeObject.__tojava__(javaClass);
     }
     
