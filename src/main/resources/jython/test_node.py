@@ -8,10 +8,13 @@ from com.clt.diamant.gui import NodePropertiesDialog
 
 class JythonTestNode(Node):
     def __init__(self, java_node):
+        # remember Java object for this node, so we can access it later
         self.java_node = java_node        
 
-        java_node.addEdge()  # output nodes have one port for an outgoing edge
+        # output nodes have one port for an outgoing edge
+        java_node.addEdge()
 
+        # 
         self.PROMPT = "prompt"
         self.WAIT = "wait"
         
