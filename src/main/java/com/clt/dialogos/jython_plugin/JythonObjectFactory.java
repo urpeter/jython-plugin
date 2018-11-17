@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.saar.coli.jython_dialogos_plugin;
+package com.clt.dialogos.jython_plugin;
 
 import java.util.HashMap;
 import java.util.Map;
