@@ -63,52 +63,21 @@ A plugin defines a collection of nodes. Throughout this documentation, we will a
 To implement your plugin, create a Python file in `src/main/resources/jython` - let's say it is called `test_node.py`. This file declares a class `JythonTestNode` which is derived from `com.clt.diamant.graph.Node`. Thus the start of your file will typically look as follows:
 
 ```
-
 from com.clt.diamant.graph import Node
 from javax.swing import JLabel, BorderFactory, JTabbedPane, JPanel
 from java.awt import GridBagLayout, GridBagConstraints, Insets
-
 from com.clt.diamant.gui import NodePropertiesDialog
 
-
 class JythonTestNode(Node):
-...
+  ...
 ```
 
 The first few lines import classes from DialogOS and the Java standard library that you will need below. The final line declares your node class.
 
-Your class must implement the following methods:
+Your class must implement the `execute` and `createEditorComponent` methods as explained in the [Wiki article on plugins](https://github.com/dialogos-project/dialogos/wiki/Plugins). Some Jython-specific notes:
 
-* `def execute(self, wozInterface, inputCenter, executionLogger):` This method is called by DialogOS every time an instance of your node is executed during a run of the dialog. You are expected to return the node in the dialog graph that should be executed next (see below).
-* `def createEditorComponent(self, properties):` This method is called whenever a dialog developer opens the properties window of your node, by double-clicking on the node or by right-clicking and selecting "Properties". This properties window always has a tab called "General". Your `createEditorComponent` is expected to return an object of class [JTabbedPane](https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html), which represents an additional tab that will be displayed to the right of the "General" tab.
-* a constructor `def __init__(self, java_node):` which accepts a `java_node` argument.
-
-### Constructor
-
-The `java_node` object that is passed to the constructor represents a "mirror image" of your plugin node inside of the Java part of DialogOS. Whenever you want to access the edges into or out of your node or the properties of your node, you should do this by calling the respective methods of the `java_node`. As a result, your constructor should probably store `java_node` in a field of your class (let's say `self.java_node`).
-
-Your constructor will typically add ports for outgoing edges to your node. It does this by calling `java_node.addEdge()` as many times as you want outgoing ports. You can also modify the outgoing ports later if your node requires it.
-
-Finally, your constructor can create properties that can be edited in your node's properties window. It does this by calling `java_node.setProperty(PROPERTY_NAME, INITIAL_VALUE)`; replace "PROPERTY_NAME" by the name you would like to give your property and "INITIAL_VALUE" by its initial value. Properties can be of any data type you like (e.g. strings, ints, booleans).
-
-### Execute
-
-Your `execute` method is called whenever DialogOS executes your node. You can access the current values of the node properties by calling `self.java_node.getProperty(PROPERTY_NAME)`.
-
-When you are done with whatever your node needs to do, you need to return the node into which DialogOS should transition next. You can obtain the node to which your node's k-th output port is connected by calling `self.java_node.getEdge(k).getTarget()`.
-
-
-### Creating editor components
-
-Your `createEditorComponent` is called whenever the user opens your node's properties window. The method is expected to return an object of class JTabbedPane. Inside of the tabbed pane, you can put any GUI components you like, using Java's standard GUI library, [Swing](https://docs.oracle.com/javase/tutorial/uiswing/). Notice that your code will usually not open its own windows (i.e. JFrames or JDialogs). It will simply return a JTabbedPane that probably contains a [JPanel](https://docs.oracle.com/javase/tutorial/uiswing/components/panel.html) as its top-level content. You will then place JLabels and components for editing properties into the JPanel.
-
-DialogOS simplifies this last step by providing methods which will automatically create Swing components for editing properties. For instance:
-
-* `NodePropertiesDialog.createTextArea(properties, PROPERTY_NAME)` will create a [JTextArea](https://docs.oracle.com/javase/tutorial/uiswing/components/textarea.html) and connect its value to your property, such that when the user closes the properties window by clicking "Ok", the value of the property will be updated.
-* `NodePropertiesDialog.createCheckBox(properties, PROPERTY_NAME, LABEL)` will create a [JCheckBox](https://docs.oracle.com/javase/tutorial/uiswing/components/button.html) and connect its value to your (boolean-valued) property. The checkbox will be labeled with the LABEL string you specify.
-
-Placing the components onto the panel requires some knowledge of Swing [layout managers](https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html). It is probably most convenient to use a [gridbag layout](https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html#gridbag). Look at the [demo plugin](https://github.com/dialogos-project/jython-demo-plugin) to get a sense of how to do this.
-
+* The `__init__` method of the Jython class is passed an argument `java_node`. This is a "mirror image" of your Jython plugin node inside of the Java part of DialogOS. Whenever you want to call methods that are not purely internal to your node implementation (such as setProperty, getProperty, addEdge, and so on), you should call these methods on the `java_node` object and not on `self`. For instance, you should access the value of a property as `self.java_node.getProperty("PROPERTY")`.
+* Placing the components onto the panel requires some knowledge of Swing [layout managers](https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html). It is probably most convenient to use a [gridbag layout](https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html#gridbag). Look at the [demo plugin](https://github.com/dialogos-project/jython-demo-plugin) to get a sense of how to do this.
 
 
 ## Creating a Java wrapper for your plugin
@@ -141,29 +110,11 @@ You need to create a Java class for each of your Jython node classes which wraps
 
 ## Declaring the plugin to DialogOS
 
-Use the file `src/main/resources/META-INF/services/com.clt.dialogos.plugin.Plugin` (with this exact name) to declare your plugin to DialogOS. This file is expected to contain a single line with the fully qualified name of your Java plugin class. If you called your plugin class `JythonDialogosPlugin` and it lives in the package `de.dialogos.plugin`, then the line will read
-
-```
-de.dialogos.plugin.JythonDialogosPlugin
-```
+You must declare your plugin to DialogOS (through the `com.clt.dialogos.plugin.Plugin` file) just like you would a Java plugin. Your Plugin class is written in Java anyway, so use its fully qualified class name in this file.
 
 
-## Adding icons to your nodes
+## Running and deploying the plugin
 
-You can add icons to your node types by putting PNG files into your resources directory. If your node type is `JythonTestNode` in package `de.dialogos.plugin`, this file must be called `JythonTestNode.png` and be in the directory `src/main/resources/de/dialogos/plugin`. Icons must be PNG files with 16x16 pixels. Icons are optional; if there is no file with the correct name and format, DialogOS will simply not display an icon for the node type.
-
-
-## Running your plugin
-
-To run a version of DialogOS with your plugin in it, go to the main directory (where `build.gradle` lives) on the command line and execute
-
-```
-gradlew run
-```
-
-This will compile your plugin, make it visible to DialogOS, and run DialogOS. You can then create dialogs that use your plugin. Notice that the non-distribution version of DialogOS (which you are using at this point) does not contain any other plugins (including NXT and SQLite), and can only use the English speech recognizer and synthesis.
-
-
-
+Proceed as described on the Wiki page for Java plugins. In particular, you can run `gradlew run` to run a DialogOS instance with your plugin (and only your plugin) loaded for quick testing.
 
 
