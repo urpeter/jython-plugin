@@ -110,11 +110,11 @@ You need to create a Java class for each of your Jython node classes which wraps
 
 ## Declaring the plugin to DialogOS
 
-You must declare your plugin to DialogOS (through the `com.clt.dialogos.plugin.Plugin` file) just like you would a Java plugin. Your Plugin class is written in Java anyway, so use its fully qualified class name in this file.
+You must declare your plugin to DialogOS (through the `com.clt.dialogos.plugin.Plugin` file) just like you would a [Java plugin](https://github.com/dialogos-project/dialogos/wiki/Plugins). Your Plugin class is written in Java anyway, so use its fully qualified class name in this file.
 
 
 ## Running and deploying the plugin
 
-Proceed as described on the Wiki page for Java plugins. In particular, you can run `gradlew run` to run a DialogOS instance with your plugin (and only your plugin) loaded for quick testing.
+Proceed as described on the [Wiki page for Java plugins](https://github.com/dialogos-project/dialogos/wiki/Plugins). In particular, you can run `gradlew run` to run a DialogOS instance with your plugin (and only your plugin) loaded for quick testing.
 
 
