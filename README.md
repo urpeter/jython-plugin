@@ -1,6 +1,6 @@
 # DialogOS plugins using Jython
 
-This library makes it easy to implement a DialogOS plugin using [Jython](http://www.jython.org/). This makes it possible for developers who are more familiar with Python than with Java to implement DialogOS plugins.
+This library makes it easy to implement a [DialogOS plugin](https://github.com/dialogos-project/dialogos/wiki/Plugins) using [Jython](http://www.jython.org/). This makes it possible for developers who are more familiar with Python than with Java to implement DialogOS plugins.
 
 To implement your own DialogOS plugin using Jython, proceed as follows. An example Jython plugin can be found [here](https://github.com/dialogos-project/jython-demo-plugin).
 
