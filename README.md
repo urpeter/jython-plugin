@@ -164,11 +164,6 @@ gradlew run
 This will compile your plugin, make it visible to DialogOS, and run DialogOS. You can then create dialogs that use your plugin. Notice that the non-distribution version of DialogOS (which you are using at this point) does not contain any other plugins (including NXT and SQLite), and can only use the English speech recognizer and synthesis.
 
 
-## Deploying your plugin
-
-When you are done developing your plugin, you would like to package it up so it can be installed into a complete DialogOS installation (with other plugins and language models). We currently haven't figured out how to add a new plugin to an existing DialogOS installation smoothly (see [issue #114](https://github.com/dialogos-project/dialogos/issues/114)).
-
-
 
 
 
